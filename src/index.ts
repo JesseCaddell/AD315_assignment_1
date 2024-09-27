@@ -1,4 +1,21 @@
 
+// Function to validate if the value is valid for the given base
+function isValidValueForBase(value: string, base: number): boolean {
+    let validChars = '';
+    if (base <= 10) {
+        validChars = '0123456789'.slice(0, base);
+    } else {
+        validChars = '0123456789ABCDEF'.slice(0, base);
+    }
+    const regex = new RegExp(`^[${validChars}]+$`, 'i');
+    // console.log('Validating value:', value, 'for base:', base);
+    // console.log('Valid characters:', validChars);
+    // console.log('Regex pattern:', regex);
+
+    const isValid = regex.test(value);
+    console.log('Is valid:', isValid);
+    return isValid;
+}
 
 // Function to convert a number from one base to another
 function convertBase(
@@ -6,6 +23,7 @@ function convertBase(
     from_base: number,
     to_base: number,
 ): string | null {
+    // console.log(`Converting value "${value}" from base ${from_base} to base ${to_base}`);
     // Validate bases
     if (
         !Number.isInteger(from_base) ||
@@ -20,7 +38,9 @@ function convertBase(
 
     // Parse the value to an integer using the from_base
     const parsed = parseInt(value, from_base);
+    // console.log('Parsed value:', parsed);
     if (isNaN(parsed)) {
+        // console.log('Parsed value is NaN');
         return null;
     }
 
@@ -43,8 +63,31 @@ function handleConversion() {
     const fromBase = parseInt(fromBaseInput.value);
     const toBase = parseInt(toBaseInput.value);
 
+    // console.log('Value:', value);
+    // console.log('From Base:', fromBase);
+    // console.log('To Base:', toBase);
+
+    // Validate the bases
+    if (
+        !Number.isInteger(fromBase) ||
+        !Number.isInteger(toBase) ||
+        fromBase < 2 ||
+        fromBase > 16 ||
+        toBase < 2 ||
+        toBase > 16
+    ) {
+        resultDiv.textContent = 'Bases must be integers between 2 and 16.';
+        return;
+    }
+
+    // Validate the input number
     if (!value) {
         resultDiv.textContent = 'Please enter a number.';
+        return;
+    }
+
+    if (!isValidValueForBase(value, fromBase)) {
+        resultDiv.textContent = `The number "${value}" is not valid for base ${fromBase}.`;
         return;
     }
 
