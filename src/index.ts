@@ -8,13 +8,7 @@ function isValidValueForBase(value: string, base: number): boolean {
         validChars = '0123456789ABCDEF'.slice(0, base);
     }
     const regex = new RegExp(`^[${validChars}]+$`, 'i');
-    // console.log('Validating value:', value, 'for base:', base);
-    // console.log('Valid characters:', validChars);
-    // console.log('Regex pattern:', regex);
-
-    const isValid = regex.test(value);
-    console.log('Is valid:', isValid);
-    return isValid;
+    return regex.test(value);
 }
 
 // Function to convert a number from one base to another
@@ -48,24 +42,33 @@ function convertBase(
     return parsed.toString(to_base).toUpperCase();
 }
 
-// Add event listener to the convert button
-const convertButton = document.getElementById("convertButton") as HTMLButtonElement;
-convertButton.addEventListener("click", handleConversion);
+// // Add event listener to the convert button
+// const convertButton = document.getElementById("convertButton") as HTMLButtonElement;
+// convertButton.addEventListener("click", handleConversion);
+
+
+// Debounce function to limit rate of function calls
+function debounce(func: Function, wait: number) {
+    let timeout: number | undefined;
+    return function (this: any, ...args: any[]) {
+        const context = this; // Capture the context
+        clearTimeout(timeout);
+        timeout = window.setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+// Declare variables so accessible everywhere
+const numberInput = document.getElementById("numberInput") as HTMLInputElement;
+const fromBaseSelect = document.getElementById("fromBase") as HTMLSelectElement;
+const toBaseSelect = document.getElementById("toBase") as HTMLSelectElement;
+const resultDiv = document.getElementById("result") as HTMLDivElement;
 
 // Function to handles the conversion when the button is clicked
 function handleConversion() {
-    const numberInput = document.getElementById("numberInput") as HTMLInputElement;
-    const fromBaseInput = document.getElementById("fromBase") as HTMLInputElement;
-    const toBaseInput = document.getElementById("toBase") as HTMLInputElement;
-    const resultDiv = document.getElementById("result") as HTMLDivElement;
-
     const value = numberInput.value.trim();
-    const fromBase = parseInt(fromBaseInput.value);
-    const toBase = parseInt(toBaseInput.value);
+    const fromBase = parseInt(fromBaseSelect.value);
+    const toBase = parseInt(toBaseSelect.value);
 
-    // console.log('Value:', value);
-    // console.log('From Base:', fromBase);
-    // console.log('To Base:', toBase);
 
     // Validate the bases
     if (
@@ -82,7 +85,7 @@ function handleConversion() {
 
     // Validate the input number
     if (!value) {
-        resultDiv.textContent = 'Please enter a number.';
+        resultDiv.textContent = '';
         return;
     }
 
@@ -98,5 +101,13 @@ function handleConversion() {
     } else {
         resultDiv.textContent = `Result: ${result}`;
     }
-
 }
+
+// Debounced version of handleConversion
+const debouncedHandleConversion = debounce(handleConversion, 300);
+
+// Event Listeners for input fields and dropdowns
+numberInput.addEventListener("input", handleConversion);
+fromBaseSelect.addEventListener("change", handleConversion);
+toBaseSelect.addEventListener("change", handleConversion);
+
