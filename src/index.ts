@@ -107,7 +107,7 @@ function handleConversion() {
 const debouncedHandleConversion = debounce(handleConversion, 300);
 
 // Event Listeners for input fields and dropdowns
-numberInput.addEventListener("input", handleConversion);
+numberInput.addEventListener("input", debouncedHandleConversion);
 fromBaseSelect.addEventListener("change", handleConversion);
 toBaseSelect.addEventListener("change", handleConversion);
 
