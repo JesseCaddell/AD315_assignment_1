@@ -1,4 +1,4 @@
-import { isValidValueForBase, convertBase} from "../converter";
+import { isValidValueForBase, convertBase} from "./converter";
 
 
 // Debounce function to limit rate of function calls

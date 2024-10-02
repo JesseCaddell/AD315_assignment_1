@@ -1,4 +1,4 @@
-import { isValidValueForBase, convertBase } from '../src/index';
+import { isValidValueForBase, convertBase } from '../src/converter';
 
 describe('Base Converter Tests', () => {
     // Normal test Cases
